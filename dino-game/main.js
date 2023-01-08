@@ -33,6 +33,7 @@ class Cactus {
 
 var timer = 0; // 게임은 프레임으로 움직임
 var cactusss = []; // 장애물 여러개 관리
+var jumptimer = 0;
 
 // 1초에 60번 실행
 // function (프레임마다 실행할 것){
@@ -46,16 +47,41 @@ function frame(){
 
   ctx.clearRect(0,0, canvas.width, canvas.height);
 
-  if (timer % 144 === 0){ // 144 프레임마다 장애물 소환 후 array에 보관
+  if (timer % 120 === 0){ // 144 프레임마다 장애물 소환 후 array에 보관
     var cactus = new Cactus(); // 장애물은 여러개 생김
     cactusss.push(cactus);
   }
-  
   cactusss.forEach((a)=>{
-    a.x--;
+    // x좌표가 0미만이면 제거
+    if (a.x < 0){
+      o.splice(i, 1) // 필요없어진 장애물 제거
+    }
+    // a.x--;
     a.draw();
   })
 
+  // 점프기능
+  if (jumping == true){
+    dino.y-=1; //100프레임 지나면 dino.y 그만
+    jumptimer++;
+  }
+  if (jumping == false){ // 내려오기 그만
+    if (dino.y < 200){
+      dino.y++;
+    }
+  }
+  if (jumptimer > 100){
+    jumping = false; //100프레임 지나면 dino.y 그만
+    jumptimer = 0;
+  }
   dino.draw();
 }
 frame();
+
+var jumping = false;
+
+document.addEventListener('keydown', function(e){
+  if (e.code === 'Space'){
+    jumping = true;
+  }
+})
